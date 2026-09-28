@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>TRY OUT TKA SOSIOLOGI 2 (2026) - SMAN 2 LUWU UTARA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+:root{
+  --orange-tua:#1b4332;
+  --orange:#2d6a4f;
+  --orange-muda:#f0f7f2;
+  --orange-muda2:#d8e9de;
+  --orange-accent:#52b788;
+  --putih:#ffffff;
+  --merah:#ef4444;
+  --hijau:#10b981;
+  --kuning:#f59e0b;
+  --abu:#6b7280;
+  --shadow:0 4px 16px rgba(27,67,50,0.12);
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{
+  font-family:'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+  background:linear-gradient(160deg, #f3faf5 0%, var(--putih) 55%, var(--orange-muda2) 100%);
+  min-height:100vh;
+  color:#1f2937;
+}
+.screen{ display:none; min-height:100vh; }
+.screen.active{ display:flex; flex-direction:column; }
+
+.app-header{
+  background:linear-gradient(90deg, var(--orange-tua), var(--orange));
+  color:#fff;
+  padding:18px 20px;
+  text-align:center;
+  box-shadow:var(--shadow);
+}
+.app-header h1{ font-size:20px; letter-spacing:0.5px; font-weight:800; }
+.app-header p{ font-size:12px; opacity:0.95; margin-top:4px; }
+
+#screen-start{ align-items:center; justify-content:center; padding:20px; }
+.start-card{
+  background:var(--putih);
+  border-radius:18px;
+  box-shadow:var(--shadow);
+  max-width:480px;
+  width:100%;
+  padding:30px 26px;
+  border:1px solid var(--orange-muda2);
+  animation:fadeUp .5s ease;
+}
+@keyframes fadeUp{ from{opacity:0; transform:translateY(16px);} to{opacity:1; transform:translateY(0);} }
+.start-card .badge{
+  background:#eef7f1;
+  color:var(--orange-tua);
+  display:inline-block;
+  padding:5px 14px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:700;
+  margin-bottom:14px;
+  border:1px solid #d8e9de;
+}
+.start-card h2{ color:var(--orange-tua); font-size:22px; margin-bottom:6px; font-weight:800; }
+.start-card .desc{ color:var(--abu); font-size:13px; margin-bottom:22px; line-height:1.5; }
+.form-group{ margin-bottom:16px; }
+.form-group label{ display:block; font-size:12px; font-weight:700; color:var(--orange-tua); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px; }
+.form-group input{
+  width:100%;
+  padding:12px 14px;
+  border:2px solid var(--orange-muda2);
+  border-radius:10px;
+  font-size:14px;
+  background:#f6fbf8;
+  transition:.2s;
+  color:#1f2937;
+  font-family:inherit;
+}
+.form-group input:focus{ outline:none; border-color:var(--orange-accent); background:#fff; }
+.info-box{
+  background:#eef7f1;
+  border-left:4px solid var(--orange-accent);
+  border-radius:8px;
+  padding:12px 14px;
+  font-size:12px;
+  color:var(--orange-tua);
+  margin-bottom:20px;
+  line-height:1.6;
+}
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  border:none; border-radius:12px; cursor:pointer;
+  font-weight:700; font-size:14px; padding:13px 22px;
+  transition:.2s; width:100%; font-family:inherit;
+}
+.btn-primary{ background:linear-gradient(90deg, var(--orange), var(--orange-accent)); color:#fff; box-shadow:0 4px 12px rgba(217,119,6,0.35);}
+.btn-primary:hover{ transform:translateY(-2px); box-shadow:0 6px 16px rgba(217,119,6,0.45); }
+.btn-primary:disabled{ background:#cbd5e1; cursor:not-allowed; transform:none; box-shadow:none; }
+.btn-secondary{ background:#eef7f1; color:var(--orange-tua); border:2px solid var(--orange-muda2); }
+.btn-secondary:hover{ background:var(--orange-muda2); }
+.btn-outline{ background:transparent; color:var(--orange); border:2px solid var(--orange); }
+.btn-danger{ background:linear-gradient(90deg,#ef4444,#f87171); color:#fff; }
+
+#screen-quiz{ padding-bottom:20px; }
+.quiz-topbar{
+  position:sticky; top:0; z-index:50;
+  background:linear-gradient(90deg, var(--orange-tua), var(--orange));
+  color:#fff;
+  padding:12px 18px;
+  display:flex; align-items:center; justify-content:space-between;
+  box-shadow:var(--shadow);
+  flex-wrap:wrap; gap:10px;
+}
+.quiz-topbar .peserta-info{ font-size:12px; line-height:1.4; }
+.quiz-topbar .peserta-info b{ font-size:14px; }
+.timer-box{
+  background:rgba(255,255,255,0.2);
+  border-radius:10px;
+  padding:8px 16px;
+  text-align:center;
+  min-width:110px;
+}
+.timer-box .label{ font-size:10px; opacity:.9; letter-spacing:1px; font-weight:700;}
+.timer-box .time{ font-size:22px; font-weight:800; font-variant-numeric:tabular-nums; }
+.timer-box.warning{ background:rgba(239,68,68,0.4); animation:pulse 1s infinite; }
+@keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:.6;} }
+
+.quiz-body{
+  display:flex; gap:18px; padding:18px; max-width:1100px; margin:0 auto; width:100%;
+  align-items:flex-start; flex-wrap:wrap;
+}
+.nav-panel{
+  background:var(--putih);
+  border-radius:16px;
+  box-shadow:var(--shadow);
+  padding:16px;
+  width:260px;
+  flex-shrink:0;
+  border:1px solid var(--orange-muda2);
+  transition:width .3s ease, padding .3s ease, opacity .25s ease, margin .3s ease, border .3s ease;
+  overflow:hidden;
+}
+.nav-panel.collapsed{ width:0; padding:0; margin:0; border:none; opacity:0; pointer-events:none; }
+.nav-panel-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.btn-collapse{
+  background:#eef7f1; border:1px solid var(--orange-muda2); color:var(--orange-tua);
+  border-radius:8px; cursor:pointer; font-size:11px; font-weight:700; padding:5px 9px;
+  white-space:nowrap; flex-shrink:0;
+}
+.btn-collapse:hover{ background:var(--orange-muda2); }
+
+.nav-reopen-tab{
+  display:none; position:fixed; left:0; top:50%; transform:translateY(-50%);
+  background:linear-gradient(180deg, var(--orange-tua), var(--orange));
+  color:#fff; border:none; border-radius:0 12px 12px 0;
+  padding:14px 8px; cursor:pointer; z-index:60; box-shadow:var(--shadow);
+  font-size:11px; font-weight:700; writing-mode:vertical-rl; text-orientation:mixed;
+  letter-spacing:1px;
+}
+.nav-reopen-tab.visible{ display:block; }
+.legend{ display:flex; flex-wrap:wrap; gap:8px; font-size:10px; margin-bottom:12px; }
+.legend span{ display:flex; align-items:center; gap:4px; color:var(--abu); }
+.legend i{ width:10px; height:10px; border-radius:3px; display:inline-block; }
+.nav-grid{ display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
+.nav-btn{
+  aspect-ratio:1; border-radius:8px; border:none; cursor:pointer;
+  font-size:12px; font-weight:700; color:#fff;
+  background:var(--merah); transition:.15s; position:relative;
+}
+.nav-btn:hover{ transform:scale(1.08); }
+.nav-btn.answered{ background:var(--hijau); }
+.nav-btn.doubt{ background:var(--kuning); color:#fff; }
+.nav-btn.current{ box-shadow:0 0 0 3px var(--orange-tua); }
+.nav-summary{ margin-top:14px; font-size:11px; color:var(--abu); line-height:1.8; }
+.nav-summary b{ color:var(--orange-tua); }
+
+.question-panel{
+  background:var(--putih); border-radius:16px; box-shadow:var(--shadow);
+  padding:22px; flex:1; min-width:280px; border:1px solid var(--orange-muda2);
+}
+.q-meta{ display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;}
+.q-number-badge{ background:var(--orange-tua); color:#fff; font-weight:800; font-size:13px; padding:6px 14px; border-radius:20px; }
+.q-type-badge{ background:#eef7f1; color:var(--orange-tua); font-size:11px; font-weight:700; padding:6px 12px; border-radius:20px; border:1px solid var(--orange-muda2); }
+
+.stimulus-box{
+  background:#f6fbf8; border:1px solid var(--orange-muda2); border-radius:12px;
+  padding:16px; margin-bottom:16px; font-size:14px; line-height:1.7; color:#374151; white-space:pre-line;
+}
+.stimulus-box .stim-label{ font-size:11px; font-weight:800; color:var(--orange-tua); margin-bottom:6px; display:block; text-transform:uppercase; letter-spacing:0.5px;}
+
+.instruksi{ font-size:12px; color:var(--abu); font-style:italic; margin-bottom:10px; }
+.q-text{ font-size:15px; line-height:1.6; color:#111827; margin-bottom:18px; font-weight:600; white-space:pre-line; }
+
+.options{ display:flex; flex-direction:column; gap:10px; }
+.option{
+  display:flex; align-items:center; gap:12px; padding:13px 16px;
+  border:2px solid #f3f4f6; border-radius:12px; cursor:pointer;
+  transition:.15s; background:#fff;
+}
+.option:hover{ background:#eef7f1; border-color:var(--orange-muda2); }
+.option.selected{ background:#eef7f1; border-color:var(--orange); }
+.option .opt-mark{
+  width:26px; height:26px; border-radius:50%; border:2px solid var(--orange-accent);
+  display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800;
+  color:var(--orange-tua); flex-shrink:0; background:#fff;
+}
+.option.selected .opt-mark{ background:var(--orange); color:#fff; border-color:var(--orange); }
+.option.checkbox .opt-mark{ border-radius:6px; }
+.option .opt-text{ font-size:14px; color:#374151; font-weight:500; }
+
+.kategori-table{ width:100%; border-collapse:collapse; margin-top:6px; }
+.kategori-table tr{ border-bottom:1px solid var(--orange-muda2); }
+.kategori-table td{ padding:12px 8px; vertical-align:middle; }
+.kategori-table td.stmt{ font-size:14px; color:#374151; font-weight:500; }
+.kategori-choice{ display:flex; gap:8px; justify-content:flex-end; }
+.kc-btn{
+  padding:8px 16px; border-radius:8px; border:2px solid var(--orange-muda2);
+  background:#fff; cursor:pointer; font-size:12px; font-weight:700; color:var(--abu); transition:.15s;
+}
+.kc-btn.benar.active{ background:var(--hijau); color:#fff; border-color:var(--hijau); }
+.kc-btn.salah.active{ background:var(--merah); color:#fff; border-color:var(--merah); }
+
+.q-nav-buttons{ display:flex; justify-content:space-between; margin-top:22px; gap:10px; flex-wrap:wrap; }
+.q-nav-buttons .left-group, .q-nav-buttons .right-group{ display:flex; gap:10px; }
+.q-nav-buttons .btn{ width:auto; padding:11px 18px; }
+
+#screen-result{ align-items:center; justify-content:center; padding:30px 16px; }
+.result-card{
+  background:var(--putih); border-radius:20px; box-shadow:var(--shadow);
+  max-width:520px; width:100%; padding:36px 28px; text-align:center;
+  border:1px solid var(--orange-muda2);
+}
+.result-card .trophy{ font-size:52px; margin-bottom:8px; }
+.result-card h2{ color:var(--orange-tua); font-size:22px; margin-bottom:4px; font-weight:800;}
+.result-card .sub{ color:var(--abu); font-size:13px; margin-bottom:24px; }
+.score-circle{
+  width:150px; height:150px; border-radius:50%;
+  background:conic-gradient(var(--orange) calc(var(--pct)*1%), var(--orange-muda2) 0);
+  display:flex; align-items:center; justify-content:center;
+  margin:0 auto 22px auto; position:relative;
+}
+.score-circle::before{ content:''; position:absolute; width:118px; height:118px; background:#fff; border-radius:50%; }
+.score-circle .score-txt{ position:relative; z-index:2; font-size:32px; font-weight:800; color:var(--orange-tua); }
+.result-stats{ display:flex; justify-content:center; gap:22px; margin-bottom:26px; flex-wrap:wrap; }
+.result-stats div{ text-align:center; }
+.result-stats .num{ font-size:20px; font-weight:800; }
+.result-stats .lbl{ font-size:11px; color:var(--abu); font-weight:700;}
+.result-stats .benar .num{ color:var(--hijau); }
+.result-stats .salah .num{ color:var(--merah); }
+.result-actions{ display:flex; flex-direction:column; gap:12px; }
+
+footer.foot-note{ text-align:center; font-size:11px; color:var(--abu); padding:16px; }
+
+.pdf-overlay{
+  display:none; position:fixed; inset:0; z-index:999;
+  background:rgba(31,41,55,0.6); align-items:center; justify-content:center;
+}
+.pdf-overlay.active{ display:flex; }
+.pdf-overlay-box{
+  background:#fff; border-radius:16px; padding:28px 36px; text-align:center;
+  box-shadow:var(--shadow); max-width:280px;
+}
+.pdf-spinner{
+  width:42px; height:42px; border:4px solid var(--orange-muda2); border-top-color:var(--orange);
+  border-radius:50%; margin:0 auto 14px auto; animation:spin 0.8s linear infinite;
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+.pdf-overlay-box p{ font-size:13px; color:var(--orange-tua); font-weight:700; }
+.pdf-overlay-box span{ font-size:11px; color:var(--abu); }
+
+#pdf-render-temp{
+  position:fixed; left:-99999px; top:0; background:#ffffff;
+  font-family:'Plus Jakarta Sans', sans-serif; color:#1f2937; width:750px;
+}
+.pdf-cover{ padding:10px; }
+.pdf-cover .pdf-band{ background:linear-gradient(90deg, #1b4332, #2d6a4f); color:#fff; padding:20px; border-radius:8px; text-align:center; }
+.pdf-cover .pdf-band h1{ font-size:20px; margin-bottom:4px; font-weight:800;}
+.pdf-cover .pdf-band h2{ font-size:15px; font-weight:600; margin-bottom:6px; }
+.pdf-cover .pdf-band p{ font-size:12px; opacity:0.95; }
+.pdf-cover .pdf-petunjuk{ font-size:13px; line-height:1.8; padding:16px 4px 4px 4px; }
+.pdf-cover .pdf-petunjuk b{ color:#1b4332; }
+.pdf-stimulus-block{ background:#f6fbf8; border:1px solid #d8e9de; border-radius:8px; padding:14px 16px; margin-bottom:12px;}
+.pdf-stimulus-block .pdf-stim-title{ font-size:11px; font-weight:800; color:#1b4332; margin-bottom:6px; display:block; text-transform:uppercase;}
+.pdf-stimulus-block .pdf-stim-text{ font-size:13px; line-height:1.6; white-space:pre-line; color:#374151;}
+.pdf-question-block{ padding:8px 4px; margin-bottom:12px; border-bottom:1px solid #f3f4f6;}
+.pdf-question-block .pdf-q-top{ display:flex; gap:10px; align-items:center; margin-bottom:6px; }
+.pdf-question-block .pdf-q-num{ background:#1b4332; color:#fff; font-weight:800; font-size:12px; border-radius:14px; padding:3px 10px; flex-shrink:0; }
+.pdf-question-block .pdf-q-instr{ font-size:11px; font-style:italic; color:#6b7280; }
+.pdf-question-block .pdf-q-text{ font-size:14px; line-height:1.6; font-weight:600; margin:6px 0 10px 0; white-space:pre-line; color:#111827;}
+.pdf-opt{ display:flex; gap:10px; padding:8px 12px; border:1px solid #f3f4f6; border-radius:8px; margin-bottom:6px; align-items:center; }
+.pdf-opt .pdf-opt-mark{ width:20px; height:20px; border-radius:50%; border:1.5px solid #52b788; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; color:#1b4332; flex-shrink:0; }
+.pdf-opt .pdf-opt-text{ font-size:13px; color:#374151;}
+.pdf-kat-row{ display:flex; justify-content:space-between; align-items:center; padding:8px 4px; border-bottom:1px solid #d8e9de; gap:14px; }
+.pdf-kat-row .pdf-kat-text{ font-size:13px; flex:1; color:#374151;}
+.pdf-kat-row .pdf-kat-choice{ font-size:11px; color:#6b7280; white-space:nowrap; font-weight:700; }
+.pdf-kunci-title{ font-size:18px; font-weight:800; color:#1b4332; text-align:center; padding:10px 0 16px 0; }
+.pdf-kunci-grid{ display:grid; grid-template-columns:1fr 1fr; gap:0 24px; font-size:12px; }
+.pdf-kunci-item{ display:flex; justify-content:space-between; padding:6px 4px; border-bottom:1px solid #eef7f1; }
+.pdf-kunci-item b{ color:#1b4332; }
+.pdf-pembahasan-title{ font-size:16px; font-weight:800; color:#1b4332; margin:20px 0 10px 0; border-bottom:2px solid #1b4332; padding-bottom:4px;}
+.pdf-pembahasan-item{ margin-bottom:12px; font-size:12px; line-height:1.6; background:#f6fbf8; padding:10px 12px; border-radius:6px; border-left:3px solid #2d6a4f; border-top:1px solid #d8e9de; border-right:1px solid #d8e9de; border-bottom:1px solid #d8e9de;}
+.pdf-pembahasan-item b{ color:#1b4332; }
+
+@media(max-width:640px){
+  .quiz-body{ flex-direction:column; }
+  .nav-panel{ width:100%; order:2; }
+  .question-panel{ order:1; }
+  .q-text, .option .opt-text{ font-size:14px; }
+}
+
+/* ============ PROTEKSI ANTI COPY-PASTE SOAL ============ */
+#screen-quiz .question-panel{
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none;
+  -webkit-touch-callout:none;
+}
+/* Input pada layar data diri tetap bisa dipilih/diketik normal */
+#screen-start, #screen-start input, #screen-start select{
+  -webkit-user-select:text;
+  -moz-user-select:text;
+  -ms-user-select:text;
+  user-select:text;
+}
+</style>
+</head>
+<body>
+
+<div class="screen active" id="screen-start">
+  <div class="app-header" style="width:100%;">
+    <h1>📙 TRY OUT TKA SOSIOLOGI 2 (2026)</h1>
+    <p>SMAN 2 LUWU UTARA &mdash; Simulasi Ujian Berbasis Web</p>
+  </div>
+  <div style="flex:1; display:flex; align-items:center; justify-content:center; padding:24px 16px;">
+    <div class="start-card">
+      <span class="badge">SMAN 2 LUWU UTARA &bull; SOSIOLOGI</span>
+      <h2>Formulir Data Peserta</h2>
+      <p class="desc">Isi Nama dan NISN Anda sebelum memulai try out.</p>
+
+      <div class="form-group">
+        <label>NAMA LENGKAP</label>
+        <input type="text" id="input-nama" placeholder="Contoh: Ahmad Fadillah" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label>NISN</label>
+        <input type="text" id="input-nisn" placeholder="Contoh: 0051234567" autocomplete="off" inputmode="numeric">
+      </div>
+
+      <div class="info-box">
+        📋 <b>Ketentuan Try Out:</b><br>
+        • Jumlah soal: <b>30 butir</b><br>
+        • Durasi: <b>75 menit</b> (berjalan otomatis)<br>
+        • Tipe Soal: Pilihan Ganda (5 Opsi), Benar/Salah, &amp; PG Kompleks<br>
+        • Nilai, rincian benar/salah, persentase, serta naskah &amp; pembahasan dapat di-download dalam bentuk PDF setelah selesai.
+      </div>
+
+      <button class="btn btn-primary" id="btn-mulai" disabled onclick="mulaiTryOut()">🚀 MULAI TRY OUT</button>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-quiz">
+  <div class="quiz-topbar">
+    <div class="peserta-info">
+      <b id="tb-nama">-</b><br>
+      NISN: <span id="tb-nisn">-</span> &bull; <span>SMAN 2 LUWU UTARA</span>
+    </div>
+    <div class="timer-box" id="timer-box">
+      <div class="label">SISA WAKTU</div>
+      <div class="time" id="timer-display">75:00</div>
+    </div>
+  </div>
+
+  <div class="quiz-body">
+    <div class="nav-panel" id="nav-panel">
+      <div class="nav-panel-head">
+        <h3>NAVIGASI SOAL</h3>
+        <button class="btn-collapse" onclick="toggleNavPanel()">◀ Sembunyikan</button>
+      </div>
+      <div class="legend">
+        <span><i style="background:var(--merah)"></i>Belum</span>
+        <span><i style="background:var(--hijau)"></i>Sudah</span>
+        <span><i style="background:var(--kuning)"></i>Ragu</span>
+      </div>
+      <div class="nav-grid" id="nav-grid"></div>
+      <div class="nav-summary">
+        Terjawab: <b id="sum-terjawab">0</b>/30<br>
+        Ragu-ragu: <b id="sum-ragu">0</b><br>
+        Belum dijawab: <b id="sum-belum">30</b>
+      </div>
+      <button class="btn btn-danger" style="margin-top:14px;" onclick="konfirmasiKirim()">📤 KIRIM JAWABAN</button>
+    </div>
+
+    <div class="question-panel">
+      <div class="q-meta">
+        <span class="q-number-badge" id="q-number-badge">SOAL 1/30</span>
+        <button class="btn-collapse" id="btn-show-nav" onclick="toggleNavPanel()" style="display:none;">☰ Tampilkan Navigasi</button>
+        <span class="q-type-badge" id="q-type-badge">PILIHAN GANDA</span>
+      </div>
+      <div id="stimulus-container"></div>
+      <p class="instruksi" id="q-instruksi">Pilih satu jawaban yang paling tepat!</p>
+      <div class="q-text" id="q-text"></div>
+      <div id="q-body"></div>
+
+      <div class="q-nav-buttons">
+        <div class="left-group">
+          <button class="btn btn-secondary" onclick="prevQuestion()">⬅ Sebelumnya</button>
+          <button class="btn btn-outline" id="btn-ragu" onclick="toggleRagu()">🤔 Tandai Ragu-ragu</button>
+        </div>
+        <div class="right-group">
+          <button class="btn btn-primary" onclick="nextQuestion()">Selanjutnya ➡</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="nav-reopen-tab" id="nav-reopen-tab" onclick="toggleNavPanel()">☰ NAVIGASI SOAL</button>
+</div>
+
+<div class="screen" id="screen-result">
+  <div class="result-card">
+    <div class="trophy">🏆</div>
+    <h2>Try Out Selesai!</h2>
+    <p class="sub" id="result-nama-sub">Berikut adalah ringkasan hasil ujian Anda.</p>
+    
+    <div class="score-circle" id="score-circle" style="--pct:0;">
+      <div class="score-txt" id="score-txt">0%</div>
+    </div>
+
+    <div class="result-stats">
+      <div class="benar"><div class="num" id="stat-benar">0</div><div class="lbl">BENAR</div></div>
+      <div class="salah"><div class="num" id="stat-salah">0</div><div class="lbl">SALAH</div></div>
+      <div><div class="num" id="stat-waktu">0:00</div><div class="lbl">WAKTU DIPAKAI</div></div>
+    </div>
+
+    <div class="result-actions">
+      <button class="btn btn-primary" onclick="downloadSertifikat()">📜 DOWNLOAD HASIL SISWA (PDF)</button>
+      <button class="btn btn-outline" onclick="downloadSoalPDF()">📄 DOWNLOAD SOAL &amp; PEMBAHASAN (PDF)</button>
+      <button class="btn btn-secondary" onclick="location.reload()">🔄 Ulangi Try Out</button>
+    </div>
+  </div>
+</div>
+
+<footer class="foot-note">SMAN 2 LUWU UTARA &bull; Try Out TKA Sosiologi 2 (2026)</footer>
+
+<div class="pdf-overlay" id="pdf-overlay">
+  <div class="pdf-overlay-box">
+    <div class="pdf-spinner"></div>
+    <p>Sedang menyusun PDF...</p>
+    <span>Mohon tunggu sebentar</span>
+  </div>
+</div>
+
+<div id="pdf-render-temp"></div>
+
+<script>
+/* ================= DATA SOAL LENGKAP 1 - 30 ================= */
+const QUESTIONS = [
+  // --- BAGIAN I ---
+  {
+    no: 1, type: "pg",
+    stimulus: "Wacana A (Untuk Soal 1–3)\nFenomena Jasa \"Sewa Pacar\" dan Kesepian di Perkotaan\nMaraknya penyedia jasa sewa pacar (rent-a-boyfriend/girlfriend) di kota-kota besar di Indonesia menarik perhatian publik. Fenomena ini muncul sebagai respons atas tingginya tingkat kesepian dan tekanan sosial anak muda urban. Sosiolog menganalisis fenomena ini bukan dari sudut pandang moral—apakah tindakan tersebut berdosa atau melanggar norma kewajaran semata—melainkan secara empiris: mengevaluasi bagaimana pergeseran pola kerja, isolasi teknologi, dan komodifikasi hubungan emosional melahirkan pasar baru bagi interaksi buatan.",
+    question: "Berdasarkan Wacana A, ciri ilmu sosiologi yang paling menonjol dari pendekatan sosiolog dalam mengamati fenomena jasa sewa pacar adalah...",
+    options: [
+      { id: "a", text: "Kumulatif, karena memperbaiki teori hubungan sosial lama." },
+      { id: "b", text: "Nonetis, karena menganalisis fenomena tanpa menilai baik-buruknya fakta sosial." },
+      { id: "c", text: "Spekulatif, karena memperkirakan dampak jangka panjang terhadap norma pernikahan." },
+      { id: "d", text: "Teoretis, karena mengesampingkan realita lapangan demi menyusun generalisasi." },
+      { id: "e", text: "Empiris, karena didasarkan pada intuisi peneliti tentang masalah moral masyarakat." }
+    ],
+    correct: "b",
+    pembahasan: "Sosiologi bersifat nonetis, artinya sosiolog tidak menilai baik atau buruknya suatu fakta sosial, melainkan menjelaskan fakta tersebut secara analitis dan obyektif."
+  },
+  {
+    no: 2, type: "mcma",
+    stimulus: "Wacana A (Untuk Soal 1–3)\nFenomena Jasa \"Sewa Pacar\" dan Kesepian di Perkotaan\nMaraknya penyedia jasa sewa pacar (rent-a-boyfriend/girlfriend) di kota-kota besar di Indonesia menarik perhatian publik. Fenomena ini muncul sebagai respons atas tingginya tingkat kesepian dan tekanan sosial anak muda urban. Sosiolog menganalisis fenomena ini bukan dari sudut pandang moral—apakah tindakan tersebut berdosa atau melanggar norma kewajaran semata—melainkan secara empiris: mengevaluasi bagaimana pergeseran pola kerja, isolasi teknologi, dan komodifikasi hubungan emosional melahirkan pasar baru bagi interaksi buatan.",
+    question: "Berdasarkan Wacana A, pilih dua argumen yang menunjukkan fungsi sosiologi sebagai alat untuk memahami fenomena jasa sewa pacar secara komprehensif!",
+    options: [
+      { id: "a", text: "Mengidentifikasi pergeseran struktur masyarakat urban yang makin individualis." },
+      { id: "b", text: "Memberikan sanksi hukum bagi pelaku jasa sewa pacar agar kembali ke norma agama." },
+      { id: "c", text: "Menganalisis fenomena komodifikasi emosi sebagai akibat dari tekanan sosial modern." },
+      { id: "d", text: "Menilai bahwa generasi muda saat ini mengalami penurunan moralitas secara mutlak." }
+    ],
+    correct: ["a", "c"],
+    pembahasan: "Fungsi sosiologi dalam memahami fenomena sosial adalah menjelaskan sebab-akibat struktur dan dinamika sosial (seperti individualisme dan komodifikasi emosi), bukan menghakimi secara moral atau memberikan sanksi hukum."
+  },
+  {
+    no: 3, type: "kategori",
+    stimulus: "Wacana A (Untuk Soal 1–3)\nFenomena Jasa \"Sewa Pacar\" dan Kesepian di Perkotaan\nMaraknya penyedia jasa sewa pacar (rent-a-boyfriend/girlfriend) di kota-kota besar di Indonesia menarik perhatian publik. Fenomena ini muncul sebagai respons atas tingginya tingkat kesepian dan tekanan sosial anak muda urban. Sosiolog menganalisis fenomena ini bukan dari sudut pandang moral—apakah tindakan tersebut berdosa atau melanggar norma kewajaran semata—melainkan secara empiris: mengevaluasi bagaimana pergeseran pola kerja, isolasi teknologi, dan komodifikasi hubungan emosional melahirkan pasar baru bagi interaksi buatan.",
+    question: "Tentukan status kebenaran dari pernyataan berikut berdasarkan Wacana A!",
+    statements: [
+      { text: "Pernyataan 1: Sosiologi memandang fenomena sewa pacar sebagai fakta sosial yang lahir dari interaksi antara pergeseran pola kerja dan perkembangan teknologi.", correct: true },
+      { text: "Pernyataan 2: Pendekatan sosiologis bertugas menghakimi pelaku sewa pacar agar bertindak sesuai standar moral mayoritas.", correct: false }
+    ],
+    pembahasan: "Pernyataan 1 BENAR karena fenomena dipandang sebagai fakta sosial akibat perubahan struktur. Pernyataan 2 SALAH karena sosiologi tidak bertugas menghakimi moralitas."
+  },
+  {
+    no: 4, type: "pg",
+    stimulus: "Wacana B (Untuk Soal 4–6)\nAksi Komunitas Bersih Sungai: Perspektif Struktural Fungsional vs Konflik\nGerakan \"Pandawara Group\" yang mengajak masyarakat membersihkan sampah di sungai dan pantai viral di media sosial. Dari perspektif Struktural Fungsional, aksi ini dipandang sebagai upaya mengembalikan keseimbangan sistem sosial yang terganggu akibat disfungsi kesadaran lingkungan. Sementara dari perspektif Teori Konflik, fenomena ini mengindikasikan ketimpangan dan kegagalan pemerintah dalam menyediakan infrastruktur pengelolaan sampah, sehingga beban ekologis dialihkan kepada inisiatif warga sipil.",
+    question: "Berdasarkan Wacana B, perbedaan mendasar antara perspektif Struktural Fungsional dan Teori Konflik dalam memandang gerakan Pandawara Group adalah...",
+    options: [
+      { id: "a", text: "Struktural Fungsional fokus pada ketimpangan kekuasaan, sedangkan Teori Konflik fokus pada kepatuhan norma." },
+      { id: "b", text: "Struktural Fungsional melihatnya sebagai pemulihan integrasi sosial, sedangkan Teori Konflik melihatnya sebagai respons atas kegagalan negara." },
+      { id: "c", text: "Struktural Fungsional menganggap aksi tersebut sia-sia, sedangkan Teori Konflik menganggap aksi tersebut solusi permanen." },
+      { id: "d", text: "Struktural Fungsional fokus pada konflik antarkelas, sedangkan Teori Konflik fokus pada adaptasi lingkungan." },
+      { id: "e", text: "Kedua teori sama-sama menganggap fenomena tersebut semata-mata interaksi simbolik antarindividu." }
+    ],
+    correct: "b",
+    pembahasan: "Struktural Fungsional memandang aksi sebagai bagian dari menjaga keseimbangan/integrasi sistem, sedangkan Teori Konflik menyoroti ketimpangan dan kegagalan pihak berkuasa/pemerintah."
+  },
+  {
+    no: 5, type: "mcma",
+    stimulus: "Wacana B (Untuk Soal 4–6)\nAksi Komunitas Bersih Sungai: Perspektif Struktural Fungsional vs Konflik\nGerakan \"Pandawara Group\" yang mengajak masyarakat membersihkan sampah di sungai dan pantai viral di media sosial. Dari perspektif Struktural Fungsional, aksi ini dipandang sebagai upaya mengembalikan keseimbangan sistem sosial yang terganggu akibat disfungsi kesadaran lingkungan. Sementara dari perspektif Teori Konflik, fenomena ini mengindikasikan ketimpangan dan kegagalan pemerintah dalam menyediakan infrastruktur pengelolaan sampah, sehingga beban ekologis dialihkan kepada inisiatif warga sipil.",
+    question: "Manakah dari pernyataan berikut yang sesuai dengan analisis perspektif sosiologi pada Wacana B?",
+    options: [
+      { id: "a", text: "Perspektif Konflik menyoroti adanya pembiaran sistemik oleh pihak berwenang atas masalah sampah." },
+      { id: "b", text: "Perspektif Struktural Fungsional menganggap sampah terjadi karena seluruh elemen masyarakat berfungsi ideal." },
+      { id: "c", text: "Keberhasilan aksi gotong royong menunjukkan berjalannya fungsi solidaritas dalam sistem sosial." }
+    ],
+    correct: ["a", "c"],
+    pembahasan: "Opsi 1 sesuai dengan Teori Konflik (kegagalan/pembiaran struktur). Opsi 3 sesuai dengan Struktural Fungsional (pemulihan fungsi solidaritas)."
+  },
+  {
+    no: 6, type: "kategori",
+    stimulus: "Wacana B (Untuk Soal 4–6)\nAksi Komunitas Bersih Sungai: Perspektif Struktural Fungsional vs Konflik\nGerakan \"Pandawara Group\" yang mengajak masyarakat membersihkan sampah di sungai dan pantai viral di media sosial. Dari perspektif Struktural Fungsional, aksi ini dipandang sebagai upaya mengembalikan keseimbangan sistem sosial yang terganggu akibat disfungsi kesadaran lingkungan. Sementara dari perspektif Teori Konflik, fenomena ini mengindikasikan ketimpangan dan kegagalan pemerintah dalam menyediakan infrastruktur pengelolaan sampah, sehingga beban ekologis dialihkan kepada inisiatif warga sipil.",
+    question: "Tentukan status kebenaran dari pernyataan berikut berdasarkan Wacana B!",
+    statements: [
+      { text: "Pernyataan 1: Perspektif interaksionisme simbolik merupakan fokus utama dari analisis Wacana B.", correct: false },
+      { text: "Pernyataan 2: Teori Konflik menilai bahwa masalah lingkungan selalu berkaitan dengan relasi kekuasaan dan kebijakan publik.", correct: true }
+    ],
+    pembahasan: "Pernyataan 1 SALAH karena wacana berfokus pada Fungsionalis dan Konflik. Pernyataan 2 BENAR karena Teori Konflik melihat masalah dari aspek kebijakan publik dan ketimpangan kekuasaan."
+  },
+
+  // --- BAGIAN II ---
+  {
+    no: 7, type: "pg",
+    stimulus: "Wacana C (Untuk Soal 7–9)\nFenomena Subkultur \"Anak Kalcer\" dan Pembentukan Identitas Remaja\nDi kawasan Blok M, Jakarta, marak berkumpul remaja yang mengidentifikasikan diri sebagai \"Anak Kalcer\". Mereka mengekspresikan diri melalui gaya pakaian thrifting (pakaian bekas bernilai estetika), membawa kamera analog, dan mendengarkan musik indie. Interaksi intensif di media sosial dan ruang publik tersebut membentuk identitas kelompok baru. Di satu sisi, fenomena ini mendorong kreativitas ekonomi kreatif lokal. Namun di sisi lain, muncul gejala konsumerisme implisit dan prasangka sosial dari kelompok masyarakat tradisional yang menganggap mereka berlebihan.",
+    question: "Faktor utama yang memicu terbentuknya identitas sosial kelompok \"Anak Kalcer\" berdasarkan wacana adalah...",
+    options: [
+      { id: "a", text: "Murni tuntutan ekonomi untuk bertahan hidup di kota besar." },
+      { id: "b", text: "Imitasi mekanis tanpa adanya proses pemaknaan simbolik." },
+      { id: "c", text: "Interaksi sosial, kesamaan preferensi estetika, dan pengaruh media sosial." },
+      { id: "d", text: "Paksaan dari struktur hukum formal di area perkotaan." },
+      { id: "e", text: "Konflik fisik antar-geng remaja di wilayah Jakarta." }
+    ],
+    correct: "c",
+    pembahasan: "Identitas subkultur terbentuk akibat interaksi intensif, kesamaan minat/estetika, serta peran media sosial dan ruang publik."
+  },
+  {
+    no: 8, type: "mcma",
+    stimulus: "Wacana C (Untuk Soal 7–9)\nFenomena Subkultur \"Anak Kalcer\" dan Pembentukan Identitas Remaja\nDi kawasan Blok M, Jakarta, marak berkumpul remaja yang mengidentifikasikan diri sebagai \"Anak Kalcer\". Mereka mengekspresikan diri melalui gaya pakaian thrifting (pakaian bekas bernilai estetika), membawa kamera analog, dan mendengarkan musik indie. Interaksi intensif di media sosial dan ruang publik tersebut membentuk identitas kelompok baru. Di satu sisi, fenomena ini mendorong kreativitas ekonomi kreatif lokal. Namun di sisi lain, muncul gejala konsumerisme implisit dan prasangka sosial dari kelompok masyarakat tradisional yang menganggap mereka berlebihan.",
+    question: "Berdasarkan Wacana C, gejala sosial fenomena \"Anak Kalcer\" memiliki dampak ganda bagi masyarakat, yaitu...",
+    options: [
+      { id: "a", text: "Dampak positif: Menggerakkan roda ekonomi kreatif lokal (seperti industri thrifting dan tempat nongkrong)." },
+      { id: "b", text: "Dampak positif: Menghilangkan seluruh perbedaan kelas sosial di Jakarta." },
+      { id: "c", text: "Dampak negatif: Memicu potensi konsumerisme dan stereotip dari kelompok lain." },
+      { id: "d", text: "Dampak negatif: Menghentikan perkembangan teknologi digital pada anak muda." }
+    ],
+    correct: ["a", "c"],
+    pembahasan: "Dampak positifnya adalah gairah ekonomi kreatif lokal (thrifting), sedangkan dampak negatifnya berupa konsumerisme dan prasangka/stereotip dari kelompok tradisional."
+  },
+  {
+    no: 9, type: "kategori",
+    stimulus: "Wacana C (Untuk Soal 7–9)\nFenomena Subkultur \"Anak Kalcer\" dan Pembentukan Identitas Remaja\nDi kawasan Blok M, Jakarta, marak berkumpul remaja yang mengidentifikasikan diri sebagai \"Anak Kalcer\". Mereka mengekspresikan diri melalui gaya pakaian thrifting (pakaian bekas bernilai estetika), membawa kamera analog, dan mendengarkan musik indie. Interaksi intensif di media sosial dan ruang publik tersebut membentuk identitas kelompok baru. Di satu sisi, fenomena ini mendorong kreativitas ekonomi kreatif lokal. Namun di sisi lain, muncul gejala konsumerisme implisit dan prasangka sosial dari kelompok masyarakat tradisional yang menganggap megenai mereka berlebihan.",
+    question: "Tentukan status kebenaran dari pernyataan berikut berdasarkan Wacana C!",
+    statements: [
+      { text: "Pernyataan 1: Pembentukan identitas \"Anak Kalcer\" terjadi melalui proses asosiatif dalam bentuk akulturasi gaya hidup dan interaksi intim.", correct: true },
+      { text: "Pernyataan 2: Gejala sosial pada wacana hanya berdampak negatif dan tidak memiliki sisi manfaat secara sosiologis.", correct: false }
+    ],
+    pembahasan: "Pernyataan 1 BENAR (terjadi penyesuaian/penerimaan gaya hidup lewat interaksi). Pernyataan 2 SALAH karena wacana menyebutkan dampak positif berupa stimulasi ekonomi kreatif."
+  },
+  {
+    no: 10, type: "pg",
+    stimulus: "Wacana D (Untuk Soal 10–12)\nDampak Cyberbullying di Media Sosial Terhadap Disosiatif Remaja\nSebuah studi kasus menunjukkan maraknya fenomena doxxing (penyebaran data pribadi) dan cyberbullying yang menimpa siswa sekolah akibat perbedaan pendapat di platform X (Twitter). Korban mengalami trauma sosial hingga menarik diri dari interaksi tatap muka (withdrawal). Interaksi di dunia maya yang anonim mempercepat eskalasi konflik karena hilangnya kontrol norma kesantunan langsung.",
+    question: "Bentuk interaksi sosial yang dominan memicu masalah sosial pada Wacana D adalah...",
+    options: [
+      { id: "a", text: "Akomodasi dalam bentuk mediasi online." },
+      { id: "b", text: "Asimilasi budaya digital." },
+      { id: "c", text: "Interaksi disosiatif berupa oposisi dan konflik virtual." },
+      { id: "d", text: "Cooperation (kerjasama) berbasis anonimitas." },
+      { id: "e", text: "Kooptasi nilai-nilai kesantunan." }
+    ],
+    correct: "c",
+    pembahasan: "Cyberbullying dan doxxing merupakan contoh nyata interaksi disosiatif yang mengarah pada pertentangan/konflik sosial."
+  },
+  {
+    no: 11, type: "mcma",
+    stimulus: "Wacana D (Untuk Soal 10–12)\nDampak Cyberbullying di Media Sosial Terhadap Disosiatif Remaja\nSebuah studi kasus menunjukkan maraknya fenomena doxxing (penyebaran data pribadi) dan cyberbullying yang menimpa siswa sekolah akibat perbedaan pendapat di platform X (Twitter). Korban mengalami trauma sosial hingga menarik diri dari interaksi tatap muka (withdrawal). Interaksi di dunia maya yang anonim mempercepat eskalasi konflik karena hilangnya kontrol norma kesantunan langsung.",
+    question: "Manakah faktor-faktor yang mempermudah terjadinya interaksi disosiatif berupa cyberbullying berdasarkan wacana?",
+    options: [
+      { id: "a", text: "Anonimitas akun di media sosial yang melemahkan kontrol sosial." },
+      { id: "b", text: "Adanya ruang diskusi langsung secara tatap muka yang dipandu fasilitator." },
+      { id: "c", text: "Hilangnya hambatan kesantunan akibat tidak berhadapan fisik secara langsung." }
+    ],
+    correct: ["a", "c"],
+    pembahasan: "Anonimitas serta tiadanya perjumpaan fisik melemahkan kontrol sosial sehingga orang lebih mudah berbuat perundungan."
+  },
+  {
+    no: 12, type: "kategori",
+    stimulus: "Wacana D (Untuk Soal 10–12)\nDampak Cyberbullying di Media Sosial Terhadap Disosiatif Remaja\nSebuah studi kasus menunjukkan maraknya fenomena doxxing (penyebaran data pribadi) dan cyberbullying yang menimpa siswa sekolah akibat perbedaan pendapat di platform X (Twitter). Korban mengalami trauma sosial hingga menarik diri dari interaksi tatap muka (withdrawal). Interaksi di dunia maya yang anonim mempercepat eskalasi konflik karena hilangnya kontrol norma kesantunan langsung.",
+    question: "Tentukan status kebenaran dari pernyataan berikut berdasarkan Wacana D!",
+    statements: [
+      { text: "Pernyataan 1: Sifat interaksi di media sosial dapat mengubah dinamika hubungan sosial dari kondusif menjadi disosiatif secara cepat.", correct: true },
+      { text: "Pernyataan 2: Penarikan diri korban dari lingkungan nyata merupakan dampak lanjutan dari gangguan pada interaksi sosialnya.", correct: true }
+    ],
+    pembahasan: "Kedua pernyataan BENAR. Konflik digital berlangsung cepat (Pernyataan 1) dan berdampak pada trauma penarikan diri sosial korban (Pernyataan 2)."
+  },
+
+  // --- BAGIAN III ---
+  {
+    no: 13, type: "pg",
+    stimulus: "Wacana E (Untuk Soal 13–15)\nPenelitian Efektivitas Bantuan Bansos di Desa Sukamaju\nTim peneliti sosiologi ingin mengetahui ketertepatan sasaran penyaluran Bantuan Langsung Tunai (BLT) di Desa Sukamaju. Peneliti menggunakan metode kualitatif dengan melakukan In-Depth Interview (wawancara mendalam) kepada warga miskin yang tidak menerima bantuan, serta Observasi Partisipatif untuk mengamati kehidupan sehari-hari penerima bantuan. Peneliti juga mengumpulkan data sekunder berupa dokumen daftar penerima bansos dari kantor desa.",
+    question: "Berdasarkan Wacana E, teknik pengumpulan data primer yang digunakan oleh peneliti adalah...",
+    options: [
+      { id: "a", text: "Studi pustaka dan studi dokumen desa." },
+      { id: "b", text: "Wawancara mendalam dan observasi partisipatif." },
+      { id: "c", text: "Angket tertutup dan survei instrumen numerik." },
+      { id: "d", text: "Analisis konten media massa setempat." },
+      { id: "e", text: "Eksperimen laboratorium sosial." }
+    ],
+    correct: "b",
+    pembahasan: "Data primer dikumpulkan langsung dari sumbernya, pada wacana ini yaitu melalui wawancara mendalam (In-Depth Interview) dan observasi partisipatif."
+  },
+  {
+    no: 14, type: "mcma",
+    stimulus: "Wacana E (Untuk Soal 13–15)\nPenelitian Efektivitas Bantuan Bansos di Desa Sukamaju\nTim peneliti sosiologi ingin mengetahui ketertepatan sasaran penyaluran Bantuan Langsung Tunai (BLT) di Desa Sukamaju. Peneliti menggunakan metode kualitatif dengan melakukan In-Depth Interview (wawancara mendalam) kepada warga miskin yang tidak menerima bantuan, serta Observasi Partisipatif untuk mengamati kehidupan sehari-hari penerima bantuan. Peneliti juga mengumpulkan data sekunder berupa dokumen daftar penerima bansos dari kantor desa.",
+    question: "Mengapa penggunaan kombinasi data primer dan sekunder sangat penting dalam penelitian pada Wacana E?",
+    options: [
+      { id: "a", text: "Untuk melakukan konfirmasi (triangulasi data) antara dokumen resmi desa dengan realitas kondisi ekonomi warga di lapangan." },
+      { id: "b", text: "Agar penelitian kualitatif dapat diubah secara otomatis menjadi analisis statistik angka mutlak." },
+      { id: "c", text: "Meningkatkan validitas dan keabsahan hasil penelitian mengenai dugaan ketidaktepatan sasaran." }
+    ],
+    correct: ["a", "c"],
+    pembahasan: "Kombinasi data primer (realita lapangan) dan data sekunder (dokumen resmi) berguna untuk triangulasi data dan meningkatkan validitas penelitian."
+  },
+  {
+    no: 15, type: "kategori",
+    stimulus: "Wacana E (Untuk Soal 13–15)\nPenelitian Efektivitas Bantuan Bansos di Desa Sukamaju\nTim peneliti sosiologi ingin mengetahui ketertepatan sasaran penyaluran Bantuan Langsung Tunai (BLT) di Desa Sukamaju. Peneliti menggunakan metode kualitatif dengan melakukan In-Depth Interview (wawancara mendalam) kepada warga miskin yang tidak menerima bantuan, serta Observasi Partisipatif untuk mengamati kehidupan sehari-hari penerima bantuan. Peneliti juga mengumpulkan data sekunder berupa dokumen daftar penerima bansos dari kantor desa.",
+    question: "Tentukan status kebenaran dari pernyataan berikut berdasarkan Wacana E!",
+    statements: [
+      { text: "Pernyataan 1: Dokumen daftar penerima bansos dari kantor desa berkedudukan sebagai data sekunder.", correct: true },
+      { text: "Pernyataan 2: Wawancara mendalam bertujuan untuk mengukur persentase kuantitatif dari kepuasan masyarakat secara cepat.", correct: false }
+    ],
+    pembahasan: "Pernyataan 1 BENAR (dokumen dari lembaga adalah data sekunder). Pernyataan 2 SALAH (wawancara mendalam bertujuan mengeksplorasi makna kualitatif, bukan pengukuran persentase kuantitatif)."
+  },
+  {
+    no: 16, type: "pg",
+    stimulus: "Wacana F (Untuk Soal 16–18)\nEtika Penelitian Sosiologi dalam Pengkajian Konflik Lahan\nSeorang peneliti sosiologi mengkaji konflik lahan antara masyarakat adat dan perusahaan sawit. Saat pengumpulan data, peneliti mendapatkan informasi sensitif mengenai rencana aksi unjuk rasa warga. Demi menjaga etika penelitian, peneliti merahasiakan identitas narasumber (anonimitas) dan tidak membocorkan rencana tersebut kepada pihak perusahaan maupun aparat, serta meminta Persetujuan Setelah Penjelasan (Informed Consent).",
+    question: "Prinsip etika penelitian sosiologi yang ditegaskan dalam Wacana F berkaitan dengan perlindungan terhadap narasumber adalah...",
+    options: [
+      { id: "a", text: "Plagiarisme dan hak cipta." },
+      { id: "b", text: "Informed consent dan anonimitas (kerahasiaan identitas)." },
+      { id: "c", text: "Objektivitas mutlak tanpa empati." },
+      { id: "d", text: "Publikasi terbuka atas seluruh data mentah narasumber." },
+      { id: "e", text: "Komersialisasi hasil riset demi keuntungan tim Peneliti." }
+    ],
+    correct: "b",
+    pembahasan: "Etika penelitian sosiologi mewajibkan informed consent (persetujuan narasumber) serta menjaga anonimitas/kerahasiaan identitas informan."
+  },
+  {
+    no: 17, type: "mcma",
+    stimulus: "Wacana F (Untuk Soal 16–18)\nEtika Penelitian Sosiologi dalam Pengkajian Konflik Lahan\nSeorang peneliti sosiologi mengkaji konflik lahan antara masyarakat adat dan perusahaan sawit. Saat pengumpulan data, peneliti mendapatkan informasi sensitif mengenai rencana aksi unjuk rasa warga. Demi menjaga etika penelitian, peneliti merahasiakan identitas narasumber (anonimitas) dan tidak membocorkan rencana tersebut kepada pihak perusahaan maupun aparat, serta meminta Persetujuan Setelah Penjelasan (Informed Consent).",
+    question: "Apa risiko yang dihindari peneliti dengan menerapkan prinsip anonimitas pada Wacana F?",
+    options: [
+      { id: "a", text: "Melindungi narasumber dari potensi ancaman keamanan atau intimidasi hukum." },
+      { id: "b", text: "Memastikan peneliti mendapatkan imbalan finansial dari sponsor penelitian." },
+      { id: "c", text: "Menjaga kepercayaan (trust) antara informan dan peneliti agar data yang diperoleh tetap objektif." }
+    ],
+    correct: ["a", "c"],
+    pembahasan: "Anonimitas melindungi subjek dari dampak negatif atau intimidasi, serta mempertahankan rasa percaya (trust) dalam riset."
+  },
+  {
+    no: 18, type: "kategori",
+    stimulus: "Wacana F (Untuk Soal 16–18)\nEtika Penelitian Sosiologi dalam Pengkajian Konflik Lahan\nSeorang peneliti sosiologi mengkaji konflik lahan antara masyarakat adat dan perusahaan sawit. Saat pengumpulan data, peneliti mendapatkan informasi sensitif mengenai rencana aksi unjuk rasa warga. Demi menjaga etika penelitian, peneliti merahasiakan identitas narasumber (anonimitas) dan tidak membocorkan rencana tersebut kepada pihak perusahaan maupun aparat, serta meminta Persetujuan Setelah Penjelasan (Informed Consent).",
+    question: "Tentukan status kebenaran dari pernyataan berikut berdasarkan Wacana F!",
+    statements: [
+      { text: "Pernyataan 1: Peneliti sosiologi diperbolehkan mengorbankan keselamatan informan demi mempublikasikan data yang spektakuler.", correct: false },
+      { text: "Pernyataan 2: Informed consent menandakan bahwa informan secara sukarela dan sadar bersedia terlibat dalam penelitian.", correct: true }
+    ],
+    pembahasan: "Pernyataan 1 SALAH (keselamatan informan adalah prioritas utama). Pernyataan 2 BENAR (Informed Consent adalah persetujuan atas dasar pemahaman)."
+  },
+
+  // --- BAGIAN IV ---
+  {
+    no: 19, type: "pg",
+    stimulus: "Wacana G (Untuk Soal 19–21)\nSistem Stratifikasi Sosial Terbuka dan Mobilisasi Pekerja Migran\nBanyak anak petani miskin di pedesaan Indonesia yang bekerja sebagai Tenaga Kerja Indonesia (TKI) atau Pekerja Migran di luar negeri. Lewat remitansi (uang yang dikirim ke kampung) dan peningkatan keterampilan, mereka mampu membeli tanah, membangun rumah modern, serta membiayai pendidikan adik-adiknya hingga jenjang perguruan tinggi. Fenomena ini mengubah posisi keluarga mereka dari strata bawah menjadi strata menengah di desanya.",
+    question: "Berdasarkan Wacana G, bentuk mobilitas sosial yang dialami oleh keluarga pekerja migran adalah...",
+    options: [
+      { id: "a", text: "Mobilitas sosial vertikal naik (social climbing)." },
+      { id: "b", text: "Mobilitas sosial vertikal turun (social sinking)." },
+      { id: "c", text: "Mobilitas sosial horizontal antarwilayah tanpa perubahan status." },
+      { id: "d", text: "Mobilitas antargenerasi ke arah penurunan derajat." },
+      { id: "e", text: "Stratifikasi sosial tertutup berbasis kasta." }
+    ],
+    correct: "a",
+    pembahasan: "Perubahan kedudukan keluarga dari strata bawah ke strata menengah di desanya menunjukkan mobilitas sosial vertikal naik (social climbing)."
+  },
+  {
+    no: 20, type: "mcma",
+    stimulus: "Wacana G (Untuk Soal 19–21)\nSistem Stratifikasi Sosial Terbuka dan Mobilisasi Pekerja Migran\nBanyak anak petani miskin di pedesaan Indonesia yang bekerja sebagai Tenaga Kerja Indonesia (TKI) atau Pekerja Migran di luar negeri. Lewat remitansi (uang yang dikirim ke kampung) dan peningkatan keterampilan, mereka mampu membeli tanah, membangun rumah modern, serta membiayai pendidikan adik-adiknya hingga jenjang perguruan tinggi. Fenomena ini mengubah posisi keluarga mereka dari strata bawah menjadi strata menengah di desanya.",
+    question: "Saluran mobilitas sosial utama yang dimanfaatkan oleh keluarga pekerja migran dalam Wacana G adalah...",
+    options: [
+      { id: "a", text: "Lembaga ekonomi (pekerjaan dan pendapatan remitansi)." },
+      { id: "b", text: "Lembaga pendidikan bagi generasi penerus keluarga." },
+      { id: "c", text: "Organisasi politik dan keikutsertaan partai." }
+    ],
+    correct: ["a", "b"],
+    pembahasan: "Saluran utama yang digunakan adalah saluran ekonomi (remitansi) dan lembaga pendidikan (membiayai adik hingga perguruan tinggi)."
+  },
+  {
+    no: 21, type: "kategori",
+    stimulus: "Wacana G (Untuk Soal 19–21)\nSistem Stratifikasi Sosial Terbuka dan Mobilisasi Pekerja Migran\nBanyak anak petani miskin di pedesaan Indonesia yang bekerja sebagai Tenaga Kerja Indonesia (TKI) atau Pekerja Migran di luar negeri. Lewat remitansi (uang yang dikirim ke kampung) dan peningkatan keterampilan, mereka mampu membeli tanah, membangun rumah modern, serta membiayai pendidikan adik-adiknya hingga jenjang perguruan tinggi. Fenomena ini mengubah posisi keluarga mereka dari strata bawah menjadi strata menengah di desanya.",
+    question: "Tentukan status kebenaran dari pernyataan berikut berdasarkan Wacana G!",
+    statements: [
+      { text: "Pernyataan 1: Struktur masyarakat pada wacana menganut sistem stratifikasi terbuka yang memungkinkan perpindahan kelas.", correct: true },
+      { text: "Pernyataan 2: Keberhasilan TKI membiayai pendidikan adiknya merupakan contoh mobilitas antargenerasi yang positif.", correct: true }
+    ],
+    pembahasan: "Kedua pernyataan BENAR. Kelas sosial dapat berubah lewat usaha (terbuka) dan perbaikan status adik dibanding orang tua adalah mobilitas antargenerasi naik."
+  },
+  {
+    no: 22, type: "pg",
+    stimulus: "Wacana H (Untuk Soal 22–24)\nPerbedaan Ketimpangan Gender dalam Dunia Kerja Digital\nMeskipun industri teknologi digital berkembang pesat, laporan sosiologis menunjukkan adanya ketimpangan gender (gender gap). Posisi strategis seperti Senior Software Engineer atau Eksekutif Perusahaan Teknologi masih didominasi laki-laki. Perempuan seringkali tertahan di posisi administratif atau mengalami fenomena Glass Ceiling (hambatan tak kasat mata) akibat stereotip gender bahwa perempuan kurang kompeten dalam bidang STEM (Science, Technology, Engineering, Math).",
+    question: "Faktor sosiologis utama yang melanggengkan ketimpangan sosial berbasis gender pada Wacana H adalah...",
+    options: [
+      { id: "a", text: "Perbedaan kemampuan biologis secara alami." },
+      { id: "b", text: "Konstruksi sosial berupa stereotip gender dan hambat struktural (glass ceiling)." },
+      { id: "c", text: "Peraturan undang-undang yang melarang wanita bekerja di bidang teknologi." },
+      { id: "d", text: "Minat perempuan yang sama sekali tidak ada di bidang digital." },
+      { id: "e", text: "Sistem kasta tradisional yang diterapkan di perusahaan modern." }
+    ],
+    correct: "b",
+    pembahasan: "Ketimpangan gender disebabkan oleh konstruksi sosial (stereotip gender) serta hambatan nir-fisik dalam organisasi (glass ceiling)."
+  },
+  {
+    no: 23, type: "mcma",
+    stimulus: "Wacana H (Untuk Soal 22–24)\nPerbedaan Ketimpangan Gender dalam Dunia Kerja Digital\nMeskipun industri teknologi digital berkembang pesat, laporan sosiologis menunjukkan adanya ketimpangan gender (gender gap). Posisi strategis seperti Senior Software Engineer atau Eksekutif Perusahaan Teknologi masih didominasi laki-laki. Perempuan seringkali tertahan di posisi administratif atau mengalami fenomena Glass Ceiling (hambatan tak kasat mata) akibat stereotip gender bahwa perempuan kurang kompeten dalam bidang STEM (Science, Technology, Engineering, Math).",
+    question: "Langkah yang tepat untuk mengatasi ketimpangan sosial pada Wacana H secara struktural adalah...",
+    options: [
+      { id: "a", text: "Menerapkan kebijakan Affirmative Action (kuota keterwakilan perempuan) dalam rekrutmen bidang STEM." },
+      { id: "b", text: "Mewajibkan perempuan untuk berhenti bekerja setelah menikah demi keseimbangan." },
+      { id: "c", text: "Menghapuskan bias stereotip gender melalui pendidikan dan pelatihan kerja yang setara." }
+    ],
+    correct: ["a", "c"],
+    pembahasan: "Solusi struktural & kultural mencakup kebijakan afirmasi (affirmative action) serta edukasi inklusif guna menghapus stereotip gender."
+  },
+  {
+    no: 24, type: "kategori",
+    stimulus: "Wacana H (Untuk Soal 22–24)\nPerbedaan Ketimpangan Gender dalam Dunia Kerja Digital\nMeskipun industri teknologi digital berkembang pesat, laporan sosiologis menunjukkan adanya ketimpangan gender (gender gap). Posisi strategis seperti Senior Software Engineer atau Eksekutif Perusahaan Teknologi masih didominasi laki-laki. Perempuan seringkali tertahan di posisi administratif atau mengalami fenomena Glass Ceiling (hambatan tak kasat mata) akibat stereotip gender bahwa perempuan kurang kompeten dalam bidang STEM (Science, Technology, Engineering, Math).",
+    question: "Tentukan status kebenaran dari pernyataan berikut berdasarkan Wacana H!",
+    statements: [
+      { text: "Pernyataan 1: Fenomena Glass Ceiling menggambarkan hambatan buatan berbasis prasangka yang menghalangi kelompok tertentu mencapai posisi puncak.", correct: true },
+      { text: "Pernyataan 2: Ketimpangan gender dalam wacana murni disebabkan oleh rendahnya kualifikasi pendidikan perempuan.", correct: false }
+    ],
+    pembahasan: "Pernyataan 1 BENAR (arti Glass Ceiling). Pernyataan 2 SALAH karena hambatan berasal dari stereotip sosial dan ketimpangan struktur, bukan karena kualifikasi."
+  },
+
+  // --- BAGIAN V ---
+  {
+    no: 25, type: "pg",
+    stimulus: "Wacana I (Untuk Soal 25–27)\nKonflik Agraria dan Akomodasi Konsiliasi\nKonflik perebutan lahan antara warga desa dan pengembang swasta memicu penutupan akses jalan dan demonstrasi berlarut-larut. Untuk menyelesaikan masalah tersebut, pemerintah daerah bertindak sebagai fasilitator dengan membentuk Komite Mediasi Independen yang mempertemukan kedua pihak. Melalui perundingan, disepakati bahwa perusahaan memberikan ganti rugi layak serta mengalokasikan 20% lahan untuk fasilitas umum warga.",
+    question: "Berdasarkan Wacana I, bentuk akomodasi konflik yang diterapkan oleh pemerintah daerah adalah...",
+    options: [
+      { id: "a", text: "Coercion (pemaksaan dengan kekuatan militer)." },
+      { id: "b", text: "Mediasi dan Konsiliasi melalui perundingan bersama." },
+      { id: "c", text: "Ajudikasi lewat meja hijau pengadilan pidana." },
+      { id: "d", text: "Stalemate (pemberhentian konflik karena kekuatan seimbang)." },
+      { id: "e", text: "Dominasi mutlak oleh salah satu pihak." }
+    ],
+    correct: "b",
+    pembahasan: "Pembentukan Komite Mediasi yang mempertemukan pihak berselisih untuk mencapai kesepakatan murni merupakan bentuk mediasi/konsiliasi."
+  },
+  {
+    no: 26, type: "mcma",
+    stimulus: "Wacana I (Untuk Soal 25–27)\nKonflik Agraria dan Akomodasi Konsiliasi\nKonflik perebutan lahan antara warga desa dan pengembang swasta memicu penutupan akses jalan dan demonstrasi berlarut-larut. Untuk menyelesaikan masalah tersebut, pemerintah daerah bertindak sebagai fasilitator dengan membentuk Komite Mediasi Independen yang mempertemukan kedua pihak. Melalui perundingan, disepakati bahwa perusahaan memberikan ganti rugi layak serta mengalokasikan 20% lahan untuk fasilitas umum warga.",
+    question: "Apa dampak positif dari tercapainya akomodasi konflik pada Wacana I?",
+    options: [
+      { id: "a", text: "Mencegah terjadinya eskalasi kekerasan fisik yang lebih luas." },
+      { id: "b", text: "Menghilangkan keberadaan warga desa dari wilayah tersebut." },
+      { id: "c", text: "Reintegrasi sosial melalui kesepakatan win-win solution antara kedua pihak." }
+    ],
+    correct: ["a", "c"],
+    pembahasan: "Penyelesaian konflik secara damai mencegah kekerasan dan menciptakan kesepakatan yang saling menguntungkan (reintegrasi)."
+  },
+  {
+    no: 27, type: "kategori",
+    stimulus: "Wacana I (Untuk Soal 25–27)\nKonflik Agraria dan Akomodasi Konsiliasi\nKonflik perebutan lahan antara warga desa dan pengembang swasta memicu penutupan akses jalan dan demonstrasi berlarut-larut. Untuk menyelesaikan masalah tersebut, pemerintah daerah bertindak sebagai fasilitator dengan membentuk Komite Mediasi Independen yang mempertemukan kedua pihak. Melalui perundingan, disepakati bahwa perusahaan memberikan ganti rugi layak serta mengalokasikan 20% lahan untuk fasilitas umum warga.",
+    question: "Tentukan status kebenaran dari pernyataan berikut berdasarkan Wacana I!",
+    statements: [
+      { text: "Pernyataan 1: Pihak ketiga dalam mediasi bertugas mengambil keputusan mengikat yang memaksa salah satu pihak kalah.", correct: false },
+      { text: "Pernyataan 2: Akomodasi yang berhasil dapat mengubah hubungan disosiatif menjadi hubungan yang lebih kooperatif.", correct: true }
+    ],
+    pembahasan: "Pernyataan 1 SALAH (mediator bersifat menengahi dan memfasilitasi, keputusan mengikat ada pada Arbitrasi/Ajudikasi). Pernyataan 2 BENAR (akomodasi meredakan konflik)."
+  },
+  {
+    no: 28, type: "pg",
+    stimulus: "Wacana J (Untuk Soal 28–30)\nGlokalisasi Kuliner Lokal di Tengah Arus Globalisasi\nMasuknya jaringan restoran cepat saji internasional ke Indonesia melahirkan tren baru. Daripada mempertahankan menu asli secara kaku, mereka meluncurkan menu khusus seperti \"Ayam Goreng Bumbu Rendang\" atau \"Ramen Bumbu Rendang\". Fenomena ini menunjukkan bahwa masyarakat tidak menyerap budaya global secara mentah-mentah (homogenisasi), melainkan mengawinkannya dengan unsur lokal (Glocalization). Hal ini menjadi strategi adaptasi budaya lokal agar tetap relevan di tengah gempuran arus globalisasi.",
+    question: "Konsep Glocalization pada Wacana J paling tepat didefinisikan sebagai...",
+    options: [
+      { id: "a", text: "Penolakan total masyarakat terhadap seluruh produk budaya asing." },
+      { id: "b", text: "Penyerapan budaya asing secara utuh sehingga menghilangkan jati diri lokal." },
+      { id: "c", text: "Penyesuaian atau perpaduan produk/budaya global dengan kearifan dan selera lokal." },
+      { id: "d", text: "Dominasi budaya lokal yang memusnahkan pengaruh global di dunia modern." },
+      { id: "e", text: "Perubahan budaya secara terisolasi tanpa interaksi antarnegara." }
+    ],
+    correct: "c",
+    pembahasan: "Glokalisasi (Glocalization) adalah perpaduan antara tren/produk global dengan cita rasa/kearifan lokal."
+  },
+  {
+    no: 29, type: "mcma",
+    stimulus: "Wacana J (Untuk Soal 28–30)\nGlokalisasi Kuliner Lokal di Tengah Arus Globalisasi\nMasuknya jaringan restoran cepat saji internasional ke Indonesia melahirkan tren baru. Daripada mempertahankan menu asli secara kaku, mereka meluncurkan menu khusus seperti \"Ayam Goreng Bumbu Rendang\" atau \"Ramen Bumbu Rendang\". Fenomena ini menunjukkan bahwa masyarakat tidak menyerap budaya global secara mentah-mentah (homogenisasi), melainkan mengawinkannya dengan unsur lokal (Glocalization). Hal ini menjadi strategi adaptasi budaya lokal agar tetap relevan di tengah gempuran arus globalisasi.",
+    question: "Manakah dampak positif dari fenomena Glocalization berdasarkan Wacana J?",
+    options: [
+      { id: "a", text: "Memperkaya ragam inovasi kuliner lokal tanpa kehilangan identitas aslinya." },
+      { id: "b", text: "Membuka peluang usaha baru bagi pelaku industri kreatif ekonomi lokal." },
+      { id: "c", text: "Menghilangkan minat masyarakat terhadap produk pangan lokal." }
+    ],
+    correct: ["a", "b"],
+    pembahasan: "Glokalisasi melahirkan inovasi kuliner bernilai lokal dan mendorong pertumbuhan ekonomi kreatif tanpa mematikan identitas."
+  },
+  {
+    no: 30, type: "kategori",
+    stimulus: "Wacana J (Untuk Soal 28–30)\nGlokalisasi Kuliner Lokal di Tengah Arus Globalisasi\nMasuknya jaringan restoran cepat saji internasional ke Indonesia melahirkan tren baru. Daripada mempertahankan menu asli secara kaku, mereka meluncurkan menu khusus seperti \"Ayam Goreng Bumbu Rendang\" atau \"Ramen Bumbu Rendang\". Fenomena ini menunjukkan bahwa masyarakat tidak menyerap budaya global secara mentah-mentah (homogenisasi), melainkan mengawinkannya dengan unsur lokal (Glocalization). Hal ini menjadi strategi adaptasi budaya lokal agar tetap relevan di tengah gempuran arus globalisasi.",
+    question: "Tentukan status kebenaran dari pernyataan berikut berdasarkan Wacana J!",
+    statements: [
+      { text: "Pernyataan 1: Fenomena \"Ramen Bumbu Rendang\" menunjukkan bahwa perubahan sosial akibat globalisasi bersifat dinamis dan interaktif.", correct: true },
+      { text: "Pernyataan 2: Glokalisasi selalu berujung pada hilangnya kebudayaan asli daerah secara permanen.", correct: false }
+    ],
+    pembahasan: "Pernyataan 1 BENAR (globalisasi bersifat interaktif). Pernyataan 2 SALAH (glokalisasi justru mempertahankan eksistensi kebudayaan daerah lewat adaptasi modern)."
+  }
+];
+
+/* ================= STATE APLIKASI ================= */
+let currentQ = 0;
+let userAnswers = {}; // { qIndex: answer }
+let doubtStatus = {}; // { qIndex: boolean }
+let timerInterval = null;
+let timeRemaining = 75 * 60; // 75 Menit
+let timeElapsed = 0;
+let userData = { nama: "", nisn: "" };
+
+/* ================= INITIALIZATION ================= */
+document.addEventListener("DOMContentLoaded", () => {
+  const inpNama = document.getElementById("input-nama");
+  const inpNisn = document.getElementById("input-nisn");
+  const btnMulai = document.getElementById("btn-mulai");
+
+  function checkForm(){
+    btnMulai.disabled = !(inpNama.value.trim() !== "" && inpNisn.value.trim() !== "");
+  }
+
+  inpNama.addEventListener("input", checkForm);
+  inpNisn.addEventListener("input", checkForm);
+});
+
+function mulaiTryOut(){
+  userData.nama = document.getElementById("input-nama").value.trim();
+  userData.nisn = document.getElementById("input-nisn").value.trim();
+
+  document.getElementById("tb-nama").innerText = userData.nama;
+  document.getElementById("tb-nisn").innerText = userData.nisn;
+
+  document.getElementById("screen-start").classList.remove("active");
+  document.getElementById("screen-quiz").classList.add("active");
+
+  initNavGrid();
+  loadQuestion(0);
+  startTimer();
+}
+
+/* ================= TIMER ================= */
+function startTimer(){
+  const timerDisplay = document.getElementById("timer-display");
+  const timerBox = document.getElementById("timer-box");
+
+  timerInterval = setInterval(() => {
+    timeRemaining--;
+    timeElapsed++;
+
+    let m = Math.floor(timeRemaining / 60);
+    let s = timeRemaining % 60;
+    timerDisplay.innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+
+    if(timeRemaining <= 300){
+      timerBox.classList.add("warning");
+    }
+
+    if(timeRemaining <= 0){
+      clearInterval(timerInterval);
+      alert("Waktu ujian telah habis!");
+      selesaiTryOut();
+    }
+  }, 1000);
+}
+
+/* ================= NAVIGATION GRID ================= */
+function initNavGrid(){
+  const grid = document.getElementById("nav-grid");
+  grid.innerHTML = "";
+  QUESTIONS.forEach((q, idx) => {
+    const btn = document.createElement("button");
+    btn.className = "nav-btn";
+    btn.id = `nav-btn-${idx}`;
+    btn.innerText = q.no;
+    btn.onclick = () => loadQuestion(idx);
+    grid.appendChild(btn);
+  });
+  updateNavSummary();
+}
+
+function updateNavSummary(){
+  let answered = Object.keys(userAnswers).filter(k => isAnswered(k)).length;
+  let doubt = Object.keys(doubtStatus).filter(k => doubtStatus[k]).length;
+  let remaining = QUESTIONS.length - answered;
+
+  document.getElementById("sum-terjawab").innerText = answered;
+  document.getElementById("sum-ragu").innerText = doubt;
+  document.getElementById("sum-belum").innerText = remaining;
+
+  QUESTIONS.forEach((q, idx) => {
+    const btn = document.getElementById(`nav-btn-${idx}`);
+    if(!btn) return;
+    btn.className = "nav-btn";
+
+    if(doubtStatus[idx]){
+      btn.classList.add("doubt");
+    } else if(isAnswered(idx)){
+      btn.classList.add("answered");
+    }
+
+    if(idx === currentQ){
+      btn.classList.add("current");
+    }
+  });
+}
+
+function isAnswered(idx){
+  let ans = userAnswers[idx];
+  if(!ans) return false;
+  let q = QUESTIONS[idx];
+  if(q.type === "pg") return typeof ans === "string";
+  if(q.type === "mcma") return Array.isArray(ans) && ans.length > 0;
+  if(q.type === "kategori") return typeof ans === "object" && Object.keys(ans).length === q.statements.length;
+  return false;
+}
+
+function toggleNavPanel(){
+  const panel = document.getElementById("nav-panel");
+  const tab = document.getElementById("nav-reopen-tab");
+  const showBtn = document.getElementById("btn-show-nav");
+  panel.classList.toggle("collapsed");
+  if(panel.classList.contains("collapsed")){
+    tab.classList.add("visible");
+    showBtn.style.display = "inline-block";
+  } else {
+    tab.classList.remove("visible");
+    showBtn.style.display = "none";
+  }
+}
+
+/* ================= RENDER QUESTION ================= */
+function loadQuestion(idx){
+  currentQ = idx;
+  const q = QUESTIONS[idx];
+
+  document.getElementById("q-number-badge").innerText = `SOAL ${q.no}/${QUESTIONS.length}`;
+
+  let typeText = "PILIHAN GANDA";
+  if(q.type === "mcma") typeText = "PILIHAN GANDA KOMPLEKS";
+  if(q.type === "kategori") typeText = "BENAR / SALAH";
+  document.getElementById("q-type-badge").innerText = typeText;
+
+  // Stimulus
+  const stimContainer = document.getElementById("stimulus-container");
+  if(q.stimulus){
+    stimContainer.innerHTML = `<div class="stimulus-box"><span class="stim-label">📜 WACANA / TEKS STIMULUS</span>${escHtml(q.stimulus)}</div>`;
+  } else {
+    stimContainer.innerHTML = "";
+  }
+
+  // Instruksi
+  const instr = document.getElementById("q-instruksi");
+  if(q.type === "pg") instr.innerText = "Pilih satu jawaban yang paling tepat!";
+  if(q.type === "mcma") instr.innerText = "Pilih beberapa jawaban yang menurut Anda benar!";
+  if(q.type === "kategori") instr.innerText = "Tentukan status BENAR / SALAH untuk setiap pernyataan!";
+
+  // Question Text
+  document.getElementById("q-text").innerText = q.question;
+
+  // Question Body
+  const qBody = document.getElementById("q-body");
+  qBody.innerHTML = "";
+
+  if(q.type === "pg"){
+    const optDiv = document.createElement("div");
+    optDiv.className = "options";
+    q.options.forEach(opt => {
+      const isSel = userAnswers[idx] === opt.id;
+      const optEl = document.createElement("div");
+      optEl.className = `option ${isSel ? 'selected' : ''}`;
+      optEl.onclick = () => selectPG(idx, opt.id);
+      optEl.innerHTML = `
+        <div class="opt-mark">${opt.id.toUpperCase()}</div>
+        <div class="opt-text">${escHtml(opt.text)}</div>
+      `;
+      optDiv.appendChild(optEl);
+    });
+    qBody.appendChild(optDiv);
+  }
+  else if(q.type === "mcma"){
+    const optDiv = document.createElement("div");
+    optDiv.className = "options";
+    let curAns = userAnswers[idx] || [];
+    q.options.forEach(opt => {
+      const isSel = curAns.includes(opt.id);
+      const optEl = document.createElement("div");
+      optEl.className = `option checkbox ${isSel ? 'selected' : ''}`;
+      optEl.onclick = () => toggleMCMA(idx, opt.id);
+      optEl.innerHTML = `
+        <div class="opt-mark">${isSel ? '✓' : ''}</div>
+        <div class="opt-text">${escHtml(opt.text)}</div>
+      `;
+      optDiv.appendChild(optEl);
+    });
+    qBody.appendChild(optDiv);
+  }
+  else if(q.type === "kategori"){
+    let curAns = userAnswers[idx] || {};
+    const table = document.createElement("table");
+    table.className = "kategori-table";
+    q.statements.forEach((st, sIdx) => {
+      const tr = document.createElement("tr");
+      const val = curAns[sIdx];
+      tr.innerHTML = `
+        <td class="stmt">${escHtml(st.text)}</td>
+        <td style="width:140px;">
+          <div class="kategori-choice">
+            <button class="kc-btn benar ${val === true ? 'active' : ''}" onclick="selectKategori(${idx}, ${sIdx}, true)">BENAR</button>
+            <button class="kc-btn salah ${val === false ? 'active' : ''}" onclick="selectKategori(${idx}, ${sIdx}, false)">SALAH</button>
+          </div>
+        </td>
+      `;
+      table.appendChild(tr);
+    });
+    qBody.appendChild(table);
+  }
+
+  // Ragu Button State
+  const btnRagu = document.getElementById("btn-ragu");
+  if(doubtStatus[idx]){
+    btnRagu.style.background = "var(--kuning)";
+    btnRagu.style.color = "#fff";
+  } else {
+    btnRagu.style.background = "transparent";
+    btnRagu.style.color = "var(--orange)";
+  }
+
+  updateNavSummary();
+}
+
+/* ================= ANSWER ACTIONS ================= */
+function selectPG(qIdx, optId){
+  userAnswers[qIdx] = optId;
+  loadQuestion(qIdx);
+}
+
+function toggleMCMA(qIdx, optId){
+  let arr = userAnswers[qIdx] || [];
+  if(arr.includes(optId)){
+    arr = arr.filter(x => x !== optId);
+  } else {
+    arr.push(optId);
+  }
+  userAnswers[qIdx] = arr;
+  loadQuestion(qIdx);
+}
+
+function selectKategori(qIdx, sIdx, val){
+  let obj = userAnswers[qIdx] || {};
+  obj[sIdx] = val;
+  userAnswers[qIdx] = obj;
+  loadQuestion(qIdx);
+}
+
+function toggleRagu(){
+  doubtStatus[currentQ] = !doubtStatus[currentQ];
+  loadQuestion(currentQ);
+}
+
+function prevQuestion(){
+  if(currentQ > 0) loadQuestion(currentQ - 1);
+}
+
+function nextQuestion(){
+  if(currentQ < QUESTIONS.length - 1) loadQuestion(currentQ + 1);
+}
+
+/* ================= FINISH QUIZ ================= */
+function konfirmasiKirim(){
+  let answered = Object.keys(userAnswers).filter(k => isAnswered(k)).length;
+  let remaining = QUESTIONS.length - answered;
+  let msg = `Anda telah menjawab ${answered} dari ${QUESTIONS.length} soal.`;
+  if(remaining > 0){
+    msg += `\nMasih ada ${remaining} soal yang BELUM dijawab!`;
+  }
+  msg += "\n\nYakin ingin mengirimkan jawaban sekarang?";
+
+  if(confirm(msg)){
+    selesaiTryOut();
+  }
+}
+
+function selesaiTryOut(){
+  clearInterval(timerInterval);
+
+  // Calculate Score
+  let totalBenar = 0;
+  QUESTIONS.forEach((q, idx) => {
+    let ans = userAnswers[idx];
+    if(!ans) return;
+
+    if(q.type === "pg"){
+      if(ans === q.correct) totalBenar++;
+    }
+    else if(q.type === "mcma"){
+      if(Array.isArray(ans) && Array.isArray(q.correct)){
+        let isSame = ans.length === q.correct.length && ans.every(v => q.correct.includes(v));
+        if(isSame) totalBenar++;
+      }
+    }
+    else if(q.type === "kategori"){
+      let allCorrect = true;
+      q.statements.forEach((st, sIdx) => {
+        if(ans[sIdx] !== st.correct) allCorrect = false;
+      });
+      if(allCorrect) totalBenar++;
+    }
+  });
+
+  let totalSalah = QUESTIONS.length - totalBenar;
+  let percentage = Math.round((totalBenar / QUESTIONS.length) * 100);
+
+  document.getElementById("stat-benar").innerText = totalBenar;
+  document.getElementById("stat-salah").innerText = totalSalah;
+  document.getElementById("score-txt").innerText = `${percentage}%`;
+  document.getElementById("score-circle").style.setProperty('--pct', percentage);
+
+  let elapsedM = Math.floor(timeElapsed / 60);
+  let elapsedS = timeElapsed % 60;
+  document.getElementById("stat-waktu").innerText = `${elapsedM}m ${elapsedS}s`;
+
+  document.getElementById("result-nama-sub").innerText = `${userData.nama} (NISN: ${userData.nisn}) - SMAN 2 LUWU UTARA`;
+
+  document.getElementById("screen-quiz").classList.remove("active");
+  document.getElementById("screen-result").classList.add("active");
+}
+
+/* ================= PDF GENERATION ================= */
+function showPdfOverlay(txt){
+  const el = document.getElementById("pdf-overlay");
+  if(txt) el.querySelector("p").innerText = txt;
+  el.classList.add("active");
+}
+function hidePdfOverlay(){
+  document.getElementById("pdf-overlay").classList.remove("active");
+}
+
+async function renderBlockToPdf(htmlContent, pdf, isFirstPage = false){
+  const temp = document.getElementById("pdf-render-temp");
+  temp.innerHTML = htmlContent;
+
+  const canvas = await html2canvas(temp, { scale: 2, useCORS: true });
+  const imgData = canvas.toDataURL("image/png");
+  const imgWidth = 190;
+  const pageHeight = 285;
+  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+  if(!isFirstPage) pdf.addPage();
+  pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
+}
+
+async function downloadSertifikat(){
+  showPdfOverlay("Menyusun Hasil Siswa PDF...");
+  try {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF("p", "mm", "a4");
+
+    let totalBenar = parseInt(document.getElementById("stat-benar").innerText);
+    let totalSalah = parseInt(document.getElementById("stat-salah").innerText);
+    let scoreTxt = document.getElementById("score-txt").innerText;
+    let waktuTxt = document.getElementById("stat-waktu").innerText;
+
+    let certHtml = `
+      <div class="pdf-cover">
+        <div class="pdf-band">
+          <h1>SMAN 2 LUWU UTARA</h1>
+          <h2>LAPORAN HASIL TRY OUT TKA SOSIOLOGI 2 (2026)</h2>
+          <p>Tahun Ajaran 2025/2026</p>
+        </div>
+        <div style="padding:20px; border:1px solid #d8e9de; border-radius:8px; margin-top:16px; background:#f6fbf8;">
+          <h3 style="color:#1b4332; margin-bottom:12px; border-bottom:2px solid #1b4332; padding-bottom:4px;">DATA PESERTA UJIAN</h3>
+          <table style="width:100%; font-size:13px; line-height:2; color:#374151;">
+            <tr><td style="width:140px; font-weight:bold;">Nama Lengkap</td><td>: ${escHtml(userData.nama)}</td></tr>
+            <tr><td style="font-weight:bold;">NISN</td><td>: ${escHtml(userData.nisn)}</td></tr>
+            <tr><td style="font-weight:bold;">Sekolah</td><td>: SMAN 2 LUWU UTARA</td></tr>
+            <tr><td style="font-weight:bold;">Mata Pelajaran</td><td>: TKA Sosiologi Paket 2</td></tr>
+            <tr><td style="font-weight:bold;">Waktu Pengerjaan</td><td>: ${waktuTxt}</td></tr>
+          </table>
+
+          <h3 style="color:#1b4332; margin-top:20px; margin-bottom:12px; border-bottom:2px solid #1b4332; padding-bottom:4px;">RINGKASAN PEROLEHAN NILAI</h3>
+          <div style="display:flex; justify-content:space-around; text-align:center; padding:16px; background:#eef7f1; border-radius:8px;">
+            <div><div style="font-size:24px; font-weight:800; color:#10b981;">${totalBenar}</div><div style="font-size:11px; color:#6b7280; font-weight:700;">JUMLAH BENAR</div></div>
+            <div><div style="font-size:24px; font-weight:800; color:#ef4444;">${totalSalah}</div><div style="font-size:11px; color:#6b7280; font-weight:700;">JUMLAH SALAH</div></div>
+            <div><div style="font-size:24px; font-weight:800; color:#1b4332;">${scoreTxt}</div><div style="font-size:11px; color:#6b7280; font-weight:700;">PERSENTASE BENAR</div></div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    await renderBlockToPdf(certHtml, pdf, true);
+    pdf.save(`Hasil_TryOut_Sosiologi2_${userData.nama.replace(/\s+/g, '_')}.pdf`);
+  } catch(e) {
+    alert("Gagal mengunduh PDF: " + e.message);
+  } finally {
+    hidePdfOverlay();
+  }
+}
+
+async function downloadSoalPDF(){
+  showPdfOverlay("Menyusun Naskah Soal & Pembahasan PDF...");
+  try {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF("p", "mm", "a4");
+
+    // Cover Page
+    let coverHtml = `
+      <div class="pdf-cover">
+        <div class="pdf-band">
+          <h1>NASKAH SOAL &amp; PEMBAHASAN</h1>
+          <h2>TRY OUT TKA SOSIOLOGI 2 - 2026</h2>
+          <p>SMAN 2 LUWU UTARA</p>
+        </div>
+        <div class="pdf-petunjuk">
+          <b>Petunjuk Teknis:</b><br>
+          1. Dokumen ini berisi 30 butir soal Try Out TKA Sosiologi Paket 2 beserta Kunci Jawaban dan Pembahasan Lengkap.<br>
+          2. Digunakan sebagai bahan evaluasi dan pembelajaran mandiri bagi siswa SMAN 2 LUWU UTARA.<br>
+          3. Dilarang menggandakan atau mendistribusikan dokumen ini tanpa izin resmi sekolah.
+        </div>
+      </div>
+    `;
+    await renderBlockToPdf(coverHtml, pdf, true);
+
+    // Render Soal Per Blocks (4-5 soal per lembar canvas)
+    let chunkSize = 3;
+    for(let i=0; i<QUESTIONS.length; i+=chunkSize){
+      let qChunk = QUESTIONS.slice(i, i+chunkSize);
+      let chunkHtml = '<div>';
+      
+      qChunk.forEach(q => {
+        let stimBlock = q.stimulus ? `<div class="pdf-stimulus-block"><span class="pdf-stim-title">📜 WACANA / TEKS STIMULUS</span><div class="pdf-stim-text">${escAttr(q.stimulus)}</div></div>` : '';
+        let typeTxt = q.type==='pg'?'Pilihan Ganda':(q.type==='mcma'?'Pilihan Ganda Kompleks':'Benar / Salah');
+        
+        let bodyHtml = '';
+        if(q.type==='pg'){
+          bodyHtml = q.options.map(o => `<div class="pdf-opt"><div class="pdf-opt-mark">${o.id.toUpperCase()}</div><div class="pdf-opt-text">${escAttr(o.text)}</div></div>`).join('');
+        } else if(q.type==='mcma'){
+          bodyHtml = q.options.map(o => `<div class="pdf-opt"><div class="pdf-opt-mark">☐</div><div class="pdf-opt-text">${escAttr(o.text)}</div></div>`).join('');
+        } else if(q.type==='kategori'){
+          bodyHtml = q.statements.map(s => `<div class="pdf-kat-row"><div class="pdf-kat-text">${escAttr(s.text)}</div><div class="pdf-kat-choice">[ BENAR / SALAH ]</div></div>`).join('');
+        }
+
+        chunkHtml += `
+          <div class="pdf-question-block">
+            <div class="pdf-q-top">
+              <span class="pdf-q-num">SOAL NOMOR ${q.no}</span>
+              <span class="pdf-q-instr">(${typeTxt})</span>
+            </div>
+            ${stimBlock}
+            <div class="pdf-q-text">${escAttr(q.question)}</div>
+            ${bodyHtml}
+          </div>
+        `;
+      });
+
+      chunkHtml += '</div>';
+      await renderBlockToPdf(chunkHtml, pdf, false);
+    }
+
+    // Kunci Jawaban & Pembahasan Page
+    let kunciItems = QUESTIONS.map(q => {
+      let jawabanTxt = "";
+      if(q.type === "pg"){ jawabanTxt = q.correct.toUpperCase(); }
+      else if(q.type === "mcma"){ jawabanTxt = q.correct.map(c=>c.toUpperCase()).join(", "); }
+      else if(q.type === "kategori"){ jawabanTxt = q.statements.map(st=> st.correct ? "BENAR" : "SALAH").join(", "); }
+      return `<div class="pdf-kunci-item"><span>Soal Nomor ${q.no}:</span><b>${jawabanTxt}</b></div>`;
+    }).join("");
+
+    let kunciHtml = `<div><div class="pdf-kunci-title">KUNCI JAWABAN SOAL 1 - 30</div><div class="pdf-kunci-grid">${kunciItems}</div></div>`;
+    await renderBlockToPdf(kunciHtml, pdf, false);
+
+    // Pembahasan Page
+    let pembahasanHtml = '<div><div class="pdf-pembahasan-title">PEMBAHASAN SOAL LENGKAP</div>';
+    QUESTIONS.forEach(q => {
+      let jawabanTxt = "";
+      if(q.type === "pg"){ jawabanTxt = q.correct.toUpperCase(); }
+      else if(q.type === "mcma"){ jawabanTxt = q.correct.map(c=>c.toUpperCase()).join(", "); }
+      else if(q.type === "kategori"){ jawabanTxt = q.statements.map(st=> st.correct ? "BENAR" : "SALAH").join(", "); }
+
+      pembahasanHtml += `<div class="pdf-pembahasan-item"><b>Soal Nomor ${q.no}</b> (Kunci: ${jawabanTxt})<br>${escAttr(q.pembahasan)}</div>`;
+    });
+    pembahasanHtml += '</div>';
+
+    await renderBlockToPdf(pembahasanHtml, pdf, false);
+
+    pdf.save("Soal_dan_Pembahasan_TKA_Sosiologi2_2026.pdf");
+  } catch(e) {
+    alert("Gagal mengunduh Naskah Soal PDF: " + e.message);
+  } finally {
+    hidePdfOverlay();
+  }
+}
+
+/* ================= UTILS ================= */
+function escHtml(str){
+  if(!str) return "";
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+function escAttr(str){
+  if(!str) return "";
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>");
+}
+
+/* =======================================================================
+   PROTEKSI ANTI COPY-PASTE SOAL
+   Mencegah siswa menyalin (copy), memotong (cut), klik kanan, atau
+   menyeleksi teks soal & bacaan pada layar pengerjaan (#screen-quiz).
+   Form data diri (nama/NISN/sekolah) tetap bisa diketik & ditempel normal.
+   ======================================================================= */
+(function(){
+  const quizPanel = document.getElementById("screen-quiz");
+  if(!quizPanel) return;
+
+  // Blokir klik kanan, copy, cut, dan seleksi teks HANYA di area soal
+  ["contextmenu","copy","cut","selectstart","dragstart"].forEach(evt=>{
+    quizPanel.addEventListener(evt, function(e){
+      const tag = (e.target.tagName || "").toLowerCase();
+      if(tag === "input" || tag === "textarea") return;
+      e.preventDefault();
+      return false;
+    });
+  });
+
+  // Blokir shortcut keyboard umum untuk copy/cut/print/simpan/lihat sumber
+  // saat layar soal sedang aktif
+  document.addEventListener("keydown", function(e){
+    if(!quizPanel.classList.contains("active")) return;
+    const key = (e.key || "").toLowerCase();
+    const ctrlOrCmd = e.ctrlKey || e.metaKey;
+    if(ctrlOrCmd && ["c","x","u","s","p","a"].includes(key)){
+      e.preventDefault();
+      return false;
+    }
+    if(key === "printscreen"){
+      e.preventDefault();
+      return false;
+    }
+  });
+})();
+</script>
+</body>
+</html>
